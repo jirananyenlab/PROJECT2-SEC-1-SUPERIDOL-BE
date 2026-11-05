@@ -1,0 +1,42 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url = env("DATABASE_URL")
+}
+
+model User {
+  id String @id @default(uuid())
+  email String @unique
+  userName String
+  passwordHash String
+  createdAt DateTime @default(now())
+  profile Profile?
+  sessions Session[]
+}
+
+model Profile {
+  id String @id
+  user User @relation(fields: [id], references: [id], onDelete: Cascade)
+  userName String
+  rankingHighScore Int @default(0)
+  completeAchievement Json @default("[]")
+  profileConfig Json @default("{\"effectVolume\":2,\"musicVolume\":2,\"showAchievementBadge\":[null,null,null]}")
+  totalScore Int[] @default([0,0,0,0,0,0,0,0])
+  totalTimePlay Int[] @default([0,0,0,0,0,0,0,0])
+  customLevel Json @default("[]")
+  customMode Json @default("[]")
+  descrition String @default("")
+  @@index([rankingHighScore])
+}
+
+model Session {
+  tokenHash String @id
+  userId String
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt DateTime
+  @@index([userId])
+  @@index([expiresAt])
+}
