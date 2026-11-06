@@ -55,7 +55,10 @@ export function createApp() {
   const attempts = new Map<string, { count: number; until: number }>();
   const app = new Elysia({ normalize: false, serve: { maxRequestBodySize: 1024 * 1024 } })
     .use(cors({
-      origin: (process.env.CORS_ORIGINS ?? 'http://localhost:5173,http://localhost:4173').split(',').map(v => v.trim()),
+      origin: [...new Set([
+        'https://math-raining.vercel.app',
+        ...(process.env.CORS_ORIGINS ?? 'http://localhost:5173,http://localhost:4173').split(','),
+      ].map(value => value.trim().replace(/\/+$/, '')).filter(Boolean))],
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
     }))

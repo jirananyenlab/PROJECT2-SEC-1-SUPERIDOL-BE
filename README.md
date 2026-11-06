@@ -113,3 +113,9 @@ and rebuild. Do not use a local localhost API URL in a deployed frontend.
 The schema migration has already been applied to the supplied database; deployment
 does not reset the database, re-import legacy data, or automatically run migrations.
 For a new database, run bun run db:migrate explicitly before using protected routes.
+
+The production frontend https://math-raining.vercel.app is explicitly included in
+our CORS allowlist. CORS_ORIGINS adds other trusted origins (comma-separated),
+including custom domains and localhost if needed. Trailing slashes are normalized.
+Unlisted origins receive no Access-Control-Allow-Origin header. This prevents a
+missing project environment variable from blocking the primary frontend's login.
