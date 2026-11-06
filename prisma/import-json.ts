@@ -1,4 +1,4 @@
-import { db } from '../src/db';
+import { db } from '../src/db.js';
 import { Prisma } from '@prisma/client';
 
 // Run explicitly; never import legacy accounts automatically on server startup.

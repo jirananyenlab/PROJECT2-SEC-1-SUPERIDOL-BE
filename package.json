@@ -3,14 +3,16 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "bun --watch src/index.ts",
-    "start": "bun src/index.ts",
+    "dev": "bun --watch src/local.ts",
+    "start": "bun src/local.ts",
     "typecheck": "tsc --noEmit",
     "test": "bun test --timeout 30000",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
     "db:dev": "prisma migrate dev",
-    "db:import": "bun prisma/import-json.ts"
+    "db:import": "bun prisma/import-json.ts",
+    "postinstall": "prisma generate",
+    "build": "prisma generate && tsc --noEmit"
   },
   "dependencies": {
     "elysia": "^1.4.0",

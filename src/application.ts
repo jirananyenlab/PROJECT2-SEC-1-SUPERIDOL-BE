@@ -2,7 +2,7 @@ import { Elysia, t } from 'elysia';
 import { cors } from '@elysiajs/cors';
 import { Prisma } from '@prisma/client';
 import { createHash, randomBytes } from 'node:crypto';
-import { db } from './db';
+import { db } from './db.js';
 
 const credentials = t.Object({
   email: t.String({ format: 'email', maxLength: 254 }),
@@ -76,6 +76,7 @@ export function createApp() {
       console.error('API request failed', code);
       return { message: 'Internal server error' };
     })
+    .get('/', () => ({ service: 'math-raining-api', status: 'ok', health: '/health' }))
     .get('/health', async ({ set }) => {
       try { await db.$queryRaw`SELECT 1`; return { status: 'ok' }; }
       catch { set.status = 503; return { status: 'unavailable' }; }

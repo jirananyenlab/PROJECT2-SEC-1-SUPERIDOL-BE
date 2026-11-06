@@ -1,6 +1,6 @@
 import { afterAll, describe, expect, test } from 'bun:test';
-import { createApp } from '../src/app';
-import { db } from '../src/db';
+import { createApp } from '../src/application.js';
+import { db } from '../src/db.js';
 
 const app = createApp();
 const call = (path: string, method = 'GET', body?: unknown, token?: string) =>

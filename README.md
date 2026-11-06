@@ -86,3 +86,30 @@ achievements, custom modes, high scores, pagination and cascade deletion.
 Set DATABASE_URL, PORT and CORS_ORIGINS on the host. Run bun install --frozen-lockfile,
 bun run db:generate, bun run db:migrate, then bun run start from this repository root.
 Use HTTPS for public access. The frontend is deployed separately.
+
+## Vercel deployment
+
+Connect this repository with the Elysia framework preset and repository root as
+Root Directory. The committed vercel.json selects Bun (required by Bun.password)
+and runs bun run build to generate the Linux Prisma Client and check TypeScript.
+Keep Install Command on its default or use bun install --frozen-lockfile.
+The src/index.ts entrypoint default-exports the Elysia app; it does not open a
+port or connect to the database during module initialization. Local dev/start
+scripts use src/local.ts and keep the normal port listener and shutdown handling.
+
+Set these environment variables for Production and, when needed, Preview:
+
+- DATABASE_URL: the private PostgreSQL URL, including sslmode=require and
+  schema=math_raining. Never commit this value. The game data lives in this schema.
+- CORS_ORIGINS: the exact deployed frontend origin. For local testing against
+  the deployed backend, also include http://localhost:5173.
+
+After changing environment variables, redeploy so the new function receives them.
+GET / returns service metadata; GET /health checks PostgreSQL and should return
+200 with status ok. GET /usersProfile?_page=1&_per_page=5 reads the leaderboard.
+A frontend deployed separately must set VITE_BASE_URL to the HTTPS backend origin
+and rebuild. Do not use a local localhost API URL in a deployed frontend.
+
+The schema migration has already been applied to the supplied database; deployment
+does not reset the database, re-import legacy data, or automatically run migrations.
+For a new database, run bun run db:migrate explicitly before using protected routes.
